@@ -32,6 +32,17 @@ namespace FlappyBird
             InitializeComponent();
             InitializePlot();
             InitializeGame();
+
+            FP.KeyDown += FP_KeyDown;
+        }
+
+        private void FP_KeyDown(object? sender, KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (e.KeyCode == Keys.Space)
+            {
+                birdVelocity = jumpForce; // Zýplama kuvvetini uygula
+            }
         }
 
         private void InitializePlot()
@@ -66,6 +77,13 @@ namespace FlappyBird
             // Kuþ hareketi
             birdVelocity += gravity;
             birdY -= birdVelocity;
+
+            // Kuþun ekrandan çýkmasýný engelle
+            if (birdY - birdRadius < 0)
+                birdY = birdRadius; // Üst sýnýr
+            else if (birdY + birdRadius > 540)
+                birdY = 540 - birdRadius; // Alt sýnýr
+
             birdShape.Center = new(birdShape.Center.X, birdY);
 
             // Engellerin hareketi
@@ -78,9 +96,16 @@ namespace FlappyBird
             }
 
             // Engellerin pozisyon ve boyut güncellemeleri
+            FP.Plot.Clear(); // Eski þekilleri temizle
+            birdShape = FP.Plot.Add.Ellipse(100, birdY, birdRadius * 2, birdRadius * 2);
+            birdShape.FillColor = ScottPlot.Color.FromColor(System.Drawing.Color.LightBlue);
+
             pipeTopShape = FP.Plot.Add.Polygon(CreateRectangle(pipeX, gapY + gapHeight / 2, pipeWidth, 540 - (gapY + gapHeight / 2)));
+            pipeTopShape.FillColor = ScottPlot.Color.FromColor(System.Drawing.Color.Green);
+
             pipeBottomShape = FP.Plot.Add.Polygon(CreateRectangle(pipeX, 0, pipeWidth, gapY - gapHeight / 2));
-              
+            pipeBottomShape.FillColor = ScottPlot.Color.FromColor(System.Drawing.Color.Green);
+
             // Çarpýþma kontrolü
             if (CheckCollision())
             {
@@ -123,13 +148,13 @@ namespace FlappyBird
             };
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Space)
-            {
-                birdVelocity = jumpForce;
-            }
-        }
+        //protected override void OnKeyDown(KeyEventArgs e)
+        //{
+        //    base.OnKeyDown(e);
+        //    if (e.KeyCode == Keys.Space)
+        //    {
+        //        birdVelocity = jumpForce;
+        //    }
+        //}
     }
 }
