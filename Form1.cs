@@ -11,7 +11,7 @@ namespace FlappyBird
         private double birdY = 270;
         private double birdRadius = 15;
         private double gravity = 2.0;
-        private double jumpForce = -7.0;
+        private double jumpForce = -17.0;
         private double birdVelocity = 0;
 
         private double pipeWidth = 50;
